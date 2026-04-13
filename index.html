@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #heart-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .title {
+            position: absolute;
+            top: 15%;
+            width: 100%;
+            text-align: center;
+            color: #f7c948; 
+            font-size: clamp(2.5rem, 10vw, 3.5rem);
+            font-weight: bold;
+            letter-spacing: 4px;
+            z-index: 10;
+            text-shadow: 0 0 15px rgba(247, 201, 72, 0.4);
+            pointer-events: none;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .nav-overlay {
+            position: absolute;
+            bottom: 12%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 25px;
+            z-index: 20;
+        }
+
+        .nav-btn {
+            width: clamp(110px, 30vw, 140px);
+            height: clamp(140px, 40vw, 180px);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(247, 201, 72, 0.2);
+        }
+
+        #start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.5s;
+        }
+
+        .start-btn {
+            padding: 1.2rem 3rem;
+            background: #cc1450;
+            color: white;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 0 30px rgba(204, 20, 80, 0.6);
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 480px) {
+            .nav-overlay { bottom: 10%; gap: 15px; }
+            .nav-btn { width: 100px; height: 130px; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="title">IT'S HIS BIRTHDAY</div>
+    <div id="heart-container"></div>
+
+    <div class="nav-overlay">
+        <a href="index1.html" class="nav-btn">Note</a>
+        <a href="index2.html" class="nav-btn">Birthday</a>
+    </div>
+
+    <audio id="birthday-audio" loop>
+        <source src="birthday-song.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const audio = document.getElementById('birthday-audio');
+        
+        function initAudio() {
+            const savedTime = localStorage.getItem('birthday_song_time');
+            const wasPlaying = localStorage.getItem('birthday_song_playing') === 'true';
+            
+            if (savedTime) audio.currentTime = parseFloat(savedTime);
+            
+            if (wasPlaying) {
+                audio.play().catch(() => showOverlay());
+            } else {
+                showOverlay();
+            }
+        }
+
+        function showOverlay() {
+            const overlay = document.createElement('div');
+            overlay.id = 'start-overlay';
+            overlay.innerHTML = `
+                <h1 style="color:#f7c948; font-family:'Times New Roman', serif; font-size:3rem; margin-bottom:2rem; text-align:center;">Your Surprise is Ready!</h1>
+                <button class="start-btn">Click to Start</button>
+            `;
+            
+            overlay.onclick = () => {
+                audio.play();
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.remove(), 500);
+                localStorage.setItem('birthday_song_playing', 'true');
+            };
+            
+            document.body.appendChild(overlay);
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            localStorage.setItem('birthday_song_time', audio.currentTime);
+        });
+        
+        audio.addEventListener('play', () => {
+            localStorage.setItem('birthday_song_playing', 'true');
+        });
+        
+        audio.addEventListener('pause', () => {
+            localStorage.setItem('birthday_song_playing', 'false');
+        });
+
+        initAudio();
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        let scene, camera, renderer, particles;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 5000);
+            camera.position.z = 500;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('heart-container').appendChild(renderer.domElement);
+
+            createHeart();
+            animate();
+        }
+
+        function createHeart() {
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            const colors = [];
+            const color = new THREE.Color();
+
+            const totalParticles = 15000;
+            for (let i = 0; i < totalParticles; i++) {
+                const t = Math.random() * Math.PI * 2;
+                const x = 16 * Math.pow(Math.sin(t), 3);
+                const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+                const factor = 12 + Math.random() * 2;
+                vertices.push(x * factor, y * factor, (Math.random() - 0.5) * 10);
+                color.setHSL(0.9 + Math.random() * 0.1, 1, 0.5 + Math.random() * 0.3);
+                colors.push(color.r, color.g, color.b);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 2,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+            
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            particles.rotation.y += 0.005;
+            particles.rotation.x += 0.002;
+            const time = Date.now() * 0.002;
+            particles.scale.setScalar(1 + Math.sin(time) * 0.05);
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        init();
+    </script>
+</body>
+</html>

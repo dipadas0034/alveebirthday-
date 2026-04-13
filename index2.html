@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Cake | For You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --heart-color: rgba(255, 77, 109, 0.4);
+            --gold: #f7c948;
+            --cake-top: #ffb3c1;
+            --cake-mid: #ff758f;
+            --cake-base: #cc1450;
+        }
+
+        body {
+            /* Fix Background: Ensure correct path and centering */
+            background: #0f0a0a url("background.png") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            font-family: 'Outfit', sans-serif;
+            position: relative;
+        }
+
+        /* Subtle overlay to help text readability without hiding background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 0;
+        }
+
+        #bg-hearts {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bg-heart {
+            position: absolute;
+            color: var(--heart-color);
+            animation: floatUp var(--duration) linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) scale(0); opacity: 0; }
+            20% { opacity: 0.4; }
+            80% { opacity: 0.4; }
+            100% { transform: translateY(-20vh) scale(1.5); opacity: 0; }
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 10vw, 4rem);
+            margin-bottom: 2rem;
+            text-align: center;
+            color: white;
+            text-shadow: 0 0 20px rgba(247, 201, 72, 0.5);
+            z-index: 10;
+            position: relative;
+        }
+
+        .cake-wrapper {
+            position: relative;
+            z-index: 10;
+            cursor: pointer;
+            width: 85%;
+            max-width: 320px;
+            animation: sway 4s ease-in-out infinite;
+        }
+
+        .cake-wrapper svg { width: 100%; height: auto; }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(247, 201, 72, 0.3);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            background: rgba(247, 201, 72, 0.1);
+            transform: translateX(-5px);
+        }
+
+        .balloon {
+            position: absolute;
+            width: 40px;
+            height: 55px;
+            border-radius: 50%;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        @media (max-width: 480px) {
+            .back-btn { top: 1rem; left: 1rem; font-size: 0.8rem; }
+            h1 { margin-top: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="bg-hearts"></div>
+    <a href="index.html" class="back-btn">← Back</a>
+    <h1>Happy Birthday Alvee!</h1>
+    
+    <div class="cake-wrapper" onclick="handleClick(event)">
+        <svg viewBox="0 0 300 300">
+            <defs>
+                <linearGradient id="cakeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#cc1450;" />
+                    <stop offset="50%" style="stop-color:#ff4d6d;" />
+                    <stop offset="100%" style="stop-color:#cc1450;" />
+                </linearGradient>
+            </defs>
+            <rect x="50" y="200" width="200" height="70" rx="15" fill="url(#cakeGrad)" />
+            <path d="M50 200 Q150 180 250 200" fill="#fff" opacity="0.3" />
+            <rect x="80" y="140" width="140" height="60" rx="12" fill="#ff758f" />
+            <path d="M80 140 Q150 125 220 140" fill="#fff" opacity="0.4" />
+            <rect x="110" y="90" width="80" height="50" rx="10" fill="#ffb3c1" />
+            <circle cx="70" cy="235" r="5" fill="#f7c948" opacity="0.8" />
+            <circle cx="110" cy="235" r="5" fill="#f7c948" opacity="0.8" />
+            <circle cx="150" cy="235" r="5" fill="#f7c948" opacity="0.8" />
+            <circle cx="190" cy="235" r="5" fill="#f7c948" opacity="0.8" />
+            <circle cx="230" cy="235" r="5" fill="#f7c948" opacity="0.8" />
+            <rect x="125" y="55" width="8" height="35" rx="4" fill="#f7c948" />
+            <rect x="146" y="45" width="8" height="45" rx="4" fill="#f7c948" />
+            <rect x="167" y="55" width="8" height="35" rx="4" fill="#f7c948" />
+            <path class="flame" d="M129 55 Q120 40 129 30 Q138 40 129 55" fill="#ffb703">
+                <animate attributeName="d" values="M129 55 Q120 40 129 30 Q138 40 129 55; M129 55 Q122 38 129 28 Q136 38 129 55; M129 55 Q120 40 129 30 Q138 40 129 55" dur="0.6s" repeatCount="indefinite" />
+            </path>
+            <path class="flame" d="M150 45 Q141 30 150 20 Q159 30 150 45" fill="#ffb703">
+                <animate attributeName="d" values="M150 45 Q141 30 150 20 Q159 30 150 45; M150 45 Q143 28 150 18 Q157 28 150 45; M150 45 Q141 30 150 20 Q159 30 150 45" dur="0.5s" repeatCount="indefinite" />
+            </path>
+            <path class="flame" d="M171 55 Q162 40 171 30 Q180 40 171 55" fill="#ffb703">
+                <animate attributeName="d" values="M171 55 Q162 40 171 30 Q180 40 171 55; M171 55 Q164 38 171 28 Q178 38 171 55; M171 55 Q162 40 171 30 Q180 40 171 55" dur="0.7s" repeatCount="indefinite" />
+            </path>
+        </svg>
+    </div>
+    <p style="margin-top: 2rem; color:white; z-index:10; font-weight:600; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Click the cake for a surprise!</p>
+
+    <audio id="birthday-audio" loop>
+        <source src="birthday-song.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const audio = document.getElementById('birthday-audio');
+        let isCelebrating = false;
+
+        function syncAudio() {
+            const savedTime = localStorage.getItem('birthday_song_time');
+            const wasPlaying = localStorage.getItem('birthday_song_playing') === 'true';
+            if (savedTime) audio.currentTime = parseFloat(savedTime);
+            if (wasPlaying) {
+                audio.play().catch(() => {
+                    document.addEventListener('click', () => audio.play(), { once: true });
+                });
+            }
+        }
+
+        function handleClick(e) {
+            audio.play();
+            document.querySelectorAll('.flame').forEach(f => f.style.display = 'none');
+            if (!isCelebrating) {
+                isCelebrating = true;
+                for(let i=0; i<35; i++) { setTimeout(dropBalloon, i * 150); }
+            }
+        }
+
+        function dropBalloon() {
+            const b = document.createElement('div');
+            b.className = 'balloon';
+            b.style.backgroundColor = ['#ff4d6d', '#ffb3c1', '#f7c948', '#4cc9f0', '#7209b7'][Math.floor(Math.random()*5)];
+            b.style.left = Math.random()*100 + 'vw';
+            b.style.top = '-10vh';
+            document.body.appendChild(b);
+            b.animate([
+                { transform: 'translateY(0) rotate(0deg)' },
+                { transform: `translateY(110vh) rotate(${Math.random()*360}deg)` }
+            ], { duration: 4000 + Math.random()*3000, easing: 'ease-in' }).onfinish = () => b.remove();
+        }
+
+        function initBG() {
+            const container = document.getElementById('bg-hearts');
+            for (let i = 0; i < 15; i++) {
+                const h = document.createElement('div');
+                h.className = 'bg-heart';
+                h.innerHTML = '❤';
+                h.style.left = Math.random() * 100 + 'vw';
+                h.style.fontSize = (15 + Math.random() * 25) + 'px';
+                h.style.setProperty('--duration', (10 + Math.random() * 15) + 's');
+                h.style.animationDelay = Math.random() * 10 + 's';
+                container.appendChild(h);
+            }
+        }
+
+        audio.addEventListener('timeupdate', () => localStorage.setItem('birthday_song_time', audio.currentTime));
+        audio.addEventListener('play', () => localStorage.setItem('birthday_song_playing', 'true'));
+        audio.addEventListener('pause', () => localStorage.setItem('birthday_song_playing', 'false'));
+        
+        initBG();
+        syncAudio();
+    </script>
+</body>
+</html>
